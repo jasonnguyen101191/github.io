@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nail Salon – Auto Assign & Analytics</title>
+  <title>Nail Salon – VND • Tip • Auto Assign</title>
   <style>
     :root{
       --bg:#f5f5f7; --card:#fff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
@@ -26,7 +26,7 @@
 
     .wrap{max-width:1220px;margin:0 auto;padding:16px}
     .grid{display:grid;gap:14px}
-    .grid-2{grid-template-columns: 1.2fr .8fr}
+    .grid-2{grid-template-columns: 1.05fr .95fr}
     .grid-3{grid-template-columns: repeat(3, minmax(0,1fr))}
     @media (max-width: 950px){ .grid-2,.grid-3{grid-template-columns:1fr} }
 
@@ -55,33 +55,29 @@
 
     .hint{padding:10px 12px;border-radius:16px;border:1px dashed var(--line);background:#fafafa;color:#374151;font-size:13px}
 
-    .staffCard{border:1px solid var(--line);border-radius:16px;padding:12px;background:linear-gradient(180deg,#fff,#fbfbfb);cursor:pointer;
-      transition:transform .12s ease, box-shadow .12s ease}
-    .staffCard:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
-    .staffCard .name{font-weight:1000}
-    .staffCard .skills{margin:6px 0;color:var(--muted);font-size:12px}
-    .miniRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .mini{padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:#fff;min-width:120px}
-    .mini .mLabel{font-size:11px;color:var(--muted)}
-    .mini .mVal{font-weight:1000;margin-top:2px}
-
-    .hide{display:none}
-
-    .modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:16px;z-index:200}
-    .modal{width:min(960px,100%);background:#fff;border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
-    .modalHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:rgba(245,245,247,.7)}
-    .modalBody{padding:14px 16px}
-    .modalGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
-    @media (max-width: 900px){ .modalGrid{grid-template-columns:1fr} }
-
     .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--soft);
       font-size:12px;border:1px solid rgba(0,0,0,.06)}
     .chip.good{color:var(--good)} .chip.bad{color:var(--bad)} .chip.warn{color:var(--warn)}
+
+    .staffGrid{display:grid;grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px}
+    @media (max-width: 950px){ .staffGrid{grid-template-columns:1fr} }
+    .staffCard{
+      border:1px solid var(--line);border-radius:16px;padding:12px;background:linear-gradient(180deg,#fff,#fbfbfb);
+      cursor:pointer; transition:transform .12s ease, box-shadow .12s ease
+    }
+    .staffCard:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
+    .staffCard .name{font-weight:1000}
+    .skills{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+    .miniRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .mini{padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:#fff;min-width:140px}
+    .mini .mLabel{font-size:11px;color:var(--muted)}
+    .mini .mVal{font-weight:1000;margin-top:2px}
 
     .cartItem{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:16px;padding:10px;background:#fff}
     .cartLeft{display:grid;gap:2px}
     .cartTitle{font-weight:900}
     .cartMeta{font-size:12px;color:var(--muted)}
+    .hide{display:none}
   </style>
 </head>
 <body>
@@ -90,12 +86,12 @@
       <div class="brand">
         <div class="dot"></div>
         <div>Nail Salon</div>
-        <span class="badge">Auto Assign</span>
+        <span class="badge">VNĐ • Tip • Auto Assign</span>
       </div>
 
       <nav class="nav">
         <a href="#" data-page="dashboard" class="active">Dashboard</a>
-        <a href="#" data-page="newCustomer">New Customer</a>
+        <a href="#" data-page="quick">Quick Assign</a>
         <a href="#" data-page="employees">Employees</a>
         <a href="#" data-page="services">Services</a>
         <a href="#" data-page="jobs">Jobs</a>
@@ -112,170 +108,121 @@
   <div class="wrap">
 
     <!-- DASHBOARD -->
-    <section id="page-dashboard" class="grid grid-2">
-      <div class="card">
-        <h2 class="title">KPI Overview</h2>
-        <div class="grid grid-3" id="kpiGrid"></div>
+    <section id="page-dashboard" class="card">
+      <h2 class="title">KPI Overview</h2>
+      <div class="grid grid-3" id="kpiGrid"></div>
 
-        <hr>
+      <hr>
 
-        <div class="row" style="align-items:flex-end;">
-          <div>
-            <div class="title" style="margin:0;">Income Balance Board</div>
-            <div class="muted">Xem ai đang cao/thấp so với target (auto-assign sẽ ưu tiên người thấp hơn)</div>
+      <div class="row" style="align-items:flex-end;">
+        <div>
+          <div class="title" style="margin:0;">Balance Board</div>
+          <div class="muted">
+            Auto-assign cân bằng theo <b>Service Revenue</b> (tiền làm). Tip được tách riêng để bạn chốt cuối ngày.
           </div>
-          <button class="btn ghost" onclick="toggleBalanceSort()">Sort</button>
         </div>
-
-        <div style="overflow:auto;margin-top:10px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Thợ</th><th>Status</th><th>Income</th><th>Gap vs Target</th><th>Jobs</th><th>Avg Ticket</th>
-              </tr>
-            </thead>
-            <tbody id="balanceBody"></tbody>
-          </table>
-        </div>
+        <button class="btn ghost" onclick="toggleBalanceSort()">Sort</button>
       </div>
 
-      <aside class="card">
-        <h2 class="title">Quick Assign</h2>
-        <div class="hint" style="margin-bottom:10px;">
-          Chỉ nhập <b>tên khách</b> → chọn <b>dịch vụ</b> → bấm <b>Add</b>. Tổng tiền tự tính. Bấm <b>Auto Assign</b> để gán thợ phù hợp và cân bằng income.
+      <div style="overflow:auto;margin-top:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Thợ</th><th>Status</th><th>Service</th><th>Tip</th><th>Gross</th><th>Gap vs Target</th><th>Jobs</th>
+            </tr>
+          </thead>
+          <tbody id="balanceBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- QUICK ASSIGN (NEW DESIGN) -->
+    <section id="page-quick" class="grid grid-2 hide">
+      <div class="card">
+        <div class="row">
+          <h2 class="title" style="margin:0;">Quick Assign</h2>
+          <div class="muted">Chọn dịch vụ → giá auto → Add vào cart → Auto/Manual assign</div>
         </div>
 
-        <div class="stack">
-          <div>
-            <label>Tên khách</label>
-            <input id="qcName" placeholder="VD: Nhat / Linh / ..." />
-          </div>
-
-          <div class="grid grid-2">
-            <div>
-              <label>Chọn dịch vụ</label>
-              <select id="qcService"></select>
-            </div>
-            <div>
-              <label>Giá (auto)</label>
-              <input id="qcPrice" type="number" min="0" />
-            </div>
-          </div>
-
-          <button class="btn ghost" onclick="addToCart(true)">Add service</button>
-
-          <div>
-            <div class="row" style="margin-top:6px;">
-              <div style="font-weight:900;">Cart</div>
-              <div class="muted">Total: <b id="qcTotal">$0.00</b></div>
-            </div>
-            <div id="qcCart" class="stack" style="margin-top:8px;"></div>
-          </div>
-
-          <button class="btn" onclick="autoAssignFromCart(true)">Auto Assign</button>
-          <div class="muted" id="qcMsg"></div>
-
-          <hr>
-
-          <div class="title" style="margin:0;">Suggested Staff</div>
-          <div class="muted">Danh sách thợ phù hợp (Available + skill match), xếp theo “income sau khi nhận khách”</div>
-          <div id="qcSuggest" class="stack" style="margin-top:8px;"></div>
+        <div class="hint" style="margin-top:10px;">
+          ✅ Không có “tên khách dưới nhân viên”. Khi assign, hệ thống sẽ hỏi tên khách 1 lần bằng popup.
+          <br/>✅ Bạn có thể <b>edit giá</b> ngay tại đây (ví dụ promo/khác giá) rồi Add vào cart.
         </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div>
+            <label>Chọn dịch vụ</label>
+            <select id="qService"></select>
+          </div>
+          <div>
+            <label>Giá (VNĐ) – auto, có thể sửa</label>
+            <input id="qPrice" type="number" min="0" />
+          </div>
+        </div>
+
+        <button class="btn ghost" style="margin-top:10px;" onclick="addToCart()">Add service</button>
+
+        <div style="margin-top:10px;">
+          <div class="row">
+            <div style="font-weight:900;">Cart</div>
+            <div class="muted">Service Total: <b id="cartTotal">0₫</b></div>
+          </div>
+          <div id="cartBox" class="stack" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <button class="btn" onclick="autoAssign()">Auto Assign (balance)</button>
+          <button class="btn ghost" onclick="clearCart()">Clear Cart</button>
+        </div>
+
+        <div class="muted" id="qMsg" style="margin-top:8px;"></div>
 
         <hr>
 
-        <h2 class="title">Now Serving</h2>
-        <div id="nowServing" class="stack"></div>
-      </aside>
-    </section>
+        <div class="title" style="margin:0;">Now Serving</div>
+        <div id="nowServing" class="stack" style="margin-top:10px;"></div>
+      </div>
 
-    <!-- NEW CUSTOMER -->
-    <section id="page-newCustomer" class="card hide">
-      <h2 class="title">New Customer (Full)</h2>
-      <div class="grid grid-2">
-        <div class="stack">
+      <div class="card">
+        <div class="row">
           <div>
-            <label>Tên khách</label>
-            <input id="custName" placeholder="VD: Anna / Vy / ..." />
+            <div class="title" style="margin:0;">Nhân viên phù hợp</div>
+            <div class="muted">Click vào card để <b>assign thủ công</b>. Chỉ hiện thợ Available + match đủ skill trong cart.</div>
           </div>
-
-          <div class="grid grid-2">
-            <div>
-              <label>Chọn dịch vụ</label>
-              <select id="serviceSelect"></select>
-            </div>
-            <div>
-              <label>Giá (auto)</label>
-              <input id="priceInput" type="number" min="0" />
-            </div>
-          </div>
-
-          <button class="btn ghost" onclick="addToCart(false)">Add service</button>
-
-          <div>
-            <div class="row" style="margin-top:6px;">
-              <div style="font-weight:900;">Cart</div>
-              <div class="muted">Total: <b id="custTotal">$0.00</b></div>
-            </div>
-            <div id="custCart" class="stack" style="margin-top:8px;"></div>
-          </div>
-
-          <div class="grid grid-2">
-            <div>
-              <label>Assign Mode</label>
-              <select id="assignMode">
-                <option value="auto">Auto-balance</option>
-                <option value="manual">Manual pick</option>
-              </select>
-            </div>
-            <div id="manualPickWrap" class="hide">
-              <label>Chọn thợ (manual)</label>
-              <select id="manualStaff"></select>
-            </div>
-          </div>
-
-          <button class="btn" onclick="autoAssignFromCart(false)">Assign</button>
-          <div class="muted" id="msg"></div>
+          <span class="badge" id="eligibleCount">0 eligible</span>
         </div>
 
-        <div class="hint">
-          <div style="font-weight:900;margin-bottom:6px;">Rules</div>
-          <ul style="margin:0;padding-left:18px;">
-            <li>Chỉ xét thợ <b>Available</b> + skill match.</li>
-            <li>Thợ <b>Break</b> sẽ không được assign.</li>
-            <li>Auto: ưu tiên thợ có <b>income thấp</b> để cân bằng.</li>
-            <li><b>Multi-service</b>: 1 thợ phải match được <b>tất cả</b> skill trong cart.</li>
-          </ul>
+        <div class="hint" style="margin-top:10px;">
+          Auto-assign chọn người có <b>Service Revenue thấp nhất</b> (để đều). Tip không dùng để cân bằng.
         </div>
+
+        <div class="staffGrid" id="eligibleGrid" style="margin-top:10px;"></div>
       </div>
     </section>
 
     <!-- EMPLOYEES -->
     <section id="page-employees" class="card hide">
       <div class="row">
-        <h2 class="title" style="margin:0;">Employees Manager</h2>
-        <div class="muted">Thêm/sửa/xoá thợ, chỉnh skills, status (Available / Break)</div>
+        <h2 class="title" style="margin:0;">Employees</h2>
+        <div class="muted">Edit tên + skills + status (Available / Break)</div>
       </div>
 
       <div class="grid grid-2" style="margin-top:10px;">
         <div class="card" style="box-shadow:none;border:1px solid var(--line);">
-          <div class="row">
-            <div style="font-weight:900;">Add / Edit Employee</div>
-            <span class="muted" id="editHint">Thêm mới hoặc click thợ để sửa</span>
-          </div>
-          <div class="stack" style="margin-top:10px;">
-            <input id="empId" type="hidden" />
+          <div style="font-weight:900;margin-bottom:8px;">Add / Edit Employee</div>
+          <input id="empId" type="hidden" />
+          <div class="stack">
             <div>
-              <label>Tên thợ</label>
+              <label>Tên</label>
               <input id="empName" placeholder="VD: Vy" />
             </div>
             <div>
-              <label>Skills (mỗi skill 1 dòng hoặc phân cách bằng dấu phẩy)</label>
-              <textarea id="empSkills" placeholder="VD: design, des simple, wax, gội, body, facial"></textarea>
+              <label>Skills (ngăn cách bằng dấu phẩy hoặc xuống dòng)</label>
+              <textarea id="empSkills" placeholder="VD: des simple, design, wax, gội, facial"></textarea>
             </div>
             <div class="grid grid-2">
               <div>
-                <label>Status mặc định</label>
+                <label>Status</label>
                 <select id="empStatus">
                   <option value="available">Available</option>
                   <option value="break">Break</option>
@@ -291,15 +238,16 @@
               <button class="btn" onclick="saveEmployee()">Save</button>
               <button class="btn ghost" onclick="clearEmpForm()">Clear</button>
             </div>
+            <div class="muted">Tip: skill nên chứa chữ “wax”, “gội”, “design”, “des simple”, “facial”… để match.</div>
           </div>
         </div>
 
         <div class="card" style="box-shadow:none;border:1px solid var(--line);">
           <div class="row">
             <div style="font-weight:900;">Staff List</div>
-            <div class="muted">Click card để xem stats & edit</div>
+            <div class="muted">Break sẽ không được assign</div>
           </div>
-          <div class="grid grid-3" id="staffGrid" style="margin-top:10px;"></div>
+          <div id="staffList" class="stack" style="margin-top:10px;"></div>
         </div>
       </div>
     </section>
@@ -307,8 +255,8 @@
     <!-- SERVICES -->
     <section id="page-services" class="card hide">
       <div class="row">
-        <h2 class="title" style="margin:0;">Service Catalog</h2>
-        <div class="muted">Mỗi service có: Tên hiển thị + Skill Tag + Price</div>
+        <h2 class="title" style="margin:0;">Services (VNĐ)</h2>
+        <div class="muted">Service name + Skill tag + Price. Chọn dịch vụ sẽ tự hiện giá.</div>
       </div>
 
       <div class="grid grid-2" style="margin-top:10px;">
@@ -316,28 +264,23 @@
           <div style="font-weight:900;margin-bottom:8px;">Add / Update Service</div>
           <div class="stack">
             <div>
-              <label>Service name (hiển thị)</label>
-              <input id="svName" placeholder="VD: Cắt da tay (45p)" />
+              <label>Service name</label>
+              <input id="svName" placeholder="VD: Sơn gel (tay/chân)" />
             </div>
             <div class="grid grid-2">
               <div>
-                <label>Skill tag (để match thợ)</label>
-                <input id="svSkill" placeholder="VD: design / wax / gội / facial ..." />
+                <label>Skill tag</label>
+                <input id="svSkill" placeholder="VD: des simple / wax / gội / facial" />
               </div>
               <div>
-                <label>Price</label>
-                <input id="svPrice" type="number" min="0" placeholder="VD: 235000" />
+                <label>Price (VNĐ)</label>
+                <input id="svPrice" type="number" min="0" placeholder="VD: 360000" />
               </div>
             </div>
 
             <div class="row">
               <button class="btn" onclick="saveService()">Save</button>
               <button class="btn ghost" onclick="clearServiceForm()">Clear</button>
-              <button class="btn ghost" onclick="seedFromMenu()">Seed from PDF menu</button>
-            </div>
-
-            <div class="muted">
-              Tip: Skill tag dùng để match kiểu “contains” (ví dụ thợ có skill “wax (all)” vẫn match tag “wax”).
             </div>
           </div>
         </div>
@@ -345,7 +288,7 @@
         <div class="card" style="box-shadow:none;border:1px solid var(--line);">
           <div class="row">
             <div style="font-weight:900;">Current Services</div>
-            <div class="muted" id="svCount"></div>
+            <span class="muted" id="svCount"></span>
           </div>
           <div style="overflow:auto;margin-top:10px;">
             <table>
@@ -360,148 +303,104 @@
     <!-- JOBS -->
     <section id="page-jobs" class="card hide">
       <h2 class="title">Jobs</h2>
-      <div class="muted">Job sẽ lưu total của cart + list service</div>
+      <div class="muted">Mỗi job lưu: service total + tip + gross + payment method</div>
       <div style="overflow:auto;margin-top:10px;">
         <table>
           <thead>
-            <tr><th>Khách</th><th>Services</th><th>Total</th><th>Thợ</th><th>Trạng thái</th></tr>
+            <tr><th>Khách</th><th>Services</th><th>Service</th><th>Tip</th><th>Gross</th><th>Payment</th><th>Thợ</th><th>Status</th></tr>
           </thead>
           <tbody id="jobsBody"></tbody>
         </table>
       </div>
     </section>
-
-  </div>
-
-  <!-- MODAL -->
-  <div id="modalOverlay" class="modalOverlay hide" onclick="hideModal()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modalHead">
-        <div>
-          <div style="font-weight:1000;font-size:16px;" id="mName">Employee</div>
-          <div class="muted" id="mSub">Stats</div>
-        </div>
-        <div class="row" style="gap:8px;">
-          <button class="btn ghost" onclick="toggleBreak()">Toggle Break</button>
-          <button class="btn ghost" onclick="loadEmployeeToForm()">Edit</button>
-          <button class="btn danger" onclick="deleteEmployee()">Delete</button>
-          <button class="btn ghost" onclick="hideModal()">Close</button>
-        </div>
-      </div>
-      <div class="modalBody">
-        <div class="modalGrid">
-          <div class="card" style="box-shadow:none;border:1px solid var(--line);">
-            <div class="row">
-              <div style="font-weight:900;">Performance</div>
-              <div id="mStatusChip"></div>
-            </div>
-            <div class="grid grid-3" style="margin-top:10px;" id="mKpi"></div>
-            <hr>
-            <div style="font-weight:900;margin-bottom:8px;">Recent Jobs</div>
-            <div style="overflow:auto;">
-              <table>
-                <thead><tr><th>Khách</th><th>Total</th><th>Status</th></tr></thead>
-                <tbody id="mJobs"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="card" style="box-shadow:none;border:1px solid var(--line);">
-            <div style="font-weight:900;margin-bottom:8px;">Skills</div>
-            <div id="mSkills" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
-            <hr>
-            <div style="font-weight:900;margin-bottom:8px;">Now</div>
-            <div id="mNow" class="hint"></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
 <script>
-/** ========== STORAGE ========== */
-const STORAGE_KEY = "nail_salon_pro_v3";
+/* =========================
+   STATE + HELPERS
+========================= */
+const STORAGE_KEY = "nail_salon_vnd_tip_v1";
 
-/** ========== HELPERS ========== */
 const $ = (id)=>document.getElementById(id);
-const esc = (str)=>String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const esc = (s)=>String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const norm = (s)=>String(s||"").trim().toLowerCase();
-const money = (n)=>`$${Number(n||0).toFixed(2)}`;
+const vnd = (n)=> {
+  const x = Math.round(Number(n||0));
+  return x.toLocaleString("vi-VN") + "₫";
+};
 
-/** ========== DEFAULT STAFF (bạn có thể sửa trong tab Employees) ========== */
+// staff default (bạn edit trong tab Employees)
 const STAFF_DEFAULT = [
-  {id:1, name:"Ha ha", skills:["Design","đấp bột"], status:"available", commission:null},
-  {id:2, name:"bánh mì", skills:["Design","đắp bột","cắt da Nga"], status:"available", commission:null},
-  {id:3, name:"thùy", skills:["design","extension","heel"], status:"available", commission:null},
-  {id:4, name:"Na", skills:["design","extension","heel"], status:"available", commission:null},
-  {id:5, name:"Tâm", skills:["des simple","H & F spa"], status:"available", commission:null},
-  {id:6, name:"Muối", skills:["des simple","H & F spa"], status:"available", commission:null},
-  {id:7, name:"Thoa", skills:["des simple","H & F spa","gel X"], status:"available", commission:null},
-  {id:8, name:"Vy", skills:["des simple","french","cắt da Nga","wax (H,F,brow…)"], status:"available", commission:null},
-  {id:9, name:"Demi", skills:["des simple","H & F spa","gội","Body"], status:"available", commission:null},
-  {id:10, name:"Nhung", skills:["lashes"], status:"available", commission:null},
-  {id:11, name:"Dung", skills:["Body","facial"], status:"available", commission:null},
-  {id:12, name:"Sathia", skills:["gội","body","wax (all)","facial"], status:"available", commission:null},
-  {id:13, name:"Linh", skills:["body","facial"], status:"available", commission:null},
-  {id:14, name:"Iris", skills:["gội","body","facial"], status:"available", commission:null},
-].map(s => ({...s, total:0, jobsDone:0, current:null}));
+  {id:1, name:"Ha ha", skills:["Design","đấp bột"], status:"available"},
+  {id:2, name:"bánh mì", skills:["Design","đắp bột","cắt da Nga"], status:"available"},
+  {id:3, name:"thùy", skills:["design","extension","heel"], status:"available"},
+  {id:4, name:"Na", skills:["design","extension","heel"], status:"available"},
+  {id:5, name:"Tâm", skills:["des simple","H & F spa"], status:"available"},
+  {id:6, name:"Muối", skills:["des simple","H & F spa"], status:"available"},
+  {id:7, name:"Thoa", skills:["des simple","H & F spa","gel X"], status:"available"},
+  {id:8, name:"Vy", skills:["des simple","french","cắt da Nga","wax (H,F,brow…)"], status:"available"},
+  {id:9, name:"Demi", skills:["des simple","H & F spa","gội","Body"], status:"available"},
+  {id:10, name:"Nhung", skills:["lashes"], status:"available"},
+  {id:11, name:"Dung", skills:["Body","facial"], status:"available"},
+  {id:12, name:"Sathia", skills:["gội","body","wax (all)","facial"], status:"available"},
+  {id:13, name:"Linh", skills:["body","facial"], status:"available"},
+  {id:14, name:"Iris", skills:["gội","body","facial"], status:"available"},
+].map(s=>({ ...s, serviceRevenue:0, tipRevenue:0, jobsDone:0, current:null, commission:null }));
 
-/**
- * Services:
- * - name: hiển thị cho khách chọn
- * - skill: tag để match thợ (contains match)
- * - price: number (USD) -> bạn muốn VND thì đổi ký hiệu/format dễ (mình để USD cho UI giống dashboard)
- *
- * Mình seed 1 số dịch vụ từ PDF (VND) -> tạm thời convert 1:1 “số” để chạy logic.
- * Bạn muốn hiển thị VND hẳn luôn mình đổi format sau.
- */
+// services default (seed từ menu – bạn có thể thêm/sửa)
 const SERVICES_DEFAULT = [
-  { id: 1, name:"Cắt da tay (45p) – Kỹ thuật Privé", skill:"cắt da", price:125000 },
-  { id: 2, name:"Cắt da tay+chân (45p) – Kỹ thuật Privé", skill:"cắt da", price:240000 },
+  // cắt da
+  {id:1, name:"Cắt da tay (Kỹ thuật Privé)", skill:"cắt da", price:125000},
+  {id:2, name:"Cắt da tay+chân (Kỹ thuật Privé)", skill:"cắt da", price:240000},
 
-  { id: 3, name:"Làm móng – Sơn thường (tay/chân)", skill:"des simple", price:235000 },
-  { id: 4, name:"Làm móng – Sơn thường (tay+chân)", skill:"des simple", price:460000 },
+  // sơn thường / gel
+  {id:3, name:"Làm móng – Sơn thường (tay/chân)", skill:"des simple", price:235000},
+  {id:4, name:"Làm móng – Sơn thường (tay+chân)", skill:"des simple", price:460000},
+  {id:5, name:"Làm móng – Sơn gel (tay/chân)", skill:"des simple", price:360000},
+  {id:6, name:"Làm móng – Sơn gel (tay+chân)", skill:"des simple", price:710000},
 
-  { id: 5, name:"Làm móng – Sơn gel (tay/chân)", skill:"des simple", price:360000 },
-  { id: 6, name:"Làm móng – Sơn gel (tay+chân)", skill:"des simple", price:710000 },
+  // wax
+  {id:7, name:"Wax – Vùng môi", skill:"wax", price:145000},
+  {id:8, name:"Wax – Vùng chân mày", skill:"wax", price:175000},
 
-  { id: 7, name:"Wax: Vùng môi", skill:"wax", price:145000 },
-  { id: 8, name:"Wax: Vùng chân mày", skill:"wax", price:175000 },
-
-  { id: 9, name:"Gội đầu thư giãn (30p) – tóc ngắn/trung bình", skill:"gội", price:255000 },
-  { id:10, name:"Gội đầu thư giãn (30p) – tóc dài", skill:"gội", price:355000 },
+  // gội
+  {id:9,  name:"Gội đầu thư giãn (tóc ngắn/trung bình)", skill:"gội", price:255000},
+  {id:10, name:"Gội đầu thư giãn (tóc dài)", skill:"gội", price:355000},
 ];
-
-/** ========== STATE ========== */
-let state = loadState();
-let selectedStaffId = null;
 
 function defaultState(){
   return {
     staff: structuredClone(STAFF_DEFAULT),
     services: structuredClone(SERVICES_DEFAULT),
+    cart: [], // list of {serviceId, priceOverride?}
     jobs: [],
-    carts: { quick: [], full: [] }, // arrays of serviceIds
     ui: { balanceSort:"gap" }
   };
 }
-function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return defaultState();
-    const parsed = JSON.parse(raw);
-    if(!parsed.staff || !parsed.services) return defaultState();
-    parsed.jobs ||= [];
-    parsed.carts ||= { quick:[], full:[] };
-    parsed.ui ||= { balanceSort:"gap" };
-    return parsed;
+    const s = JSON.parse(raw);
+    if(!s.staff || !s.services) return defaultState();
+    s.cart ||= [];
+    s.jobs ||= [];
+    s.ui ||= {balanceSort:"gap"};
+    return s;
   }catch{ return defaultState(); }
 }
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
-/** ========== NAV ========== */
+let state = loadState();
+
+/* =========================
+   NAV
+========================= */
 document.querySelectorAll(".nav a").forEach(a=>{
-  a.addEventListener("click",(e)=>{ e.preventDefault(); setPage(a.dataset.page); });
+  a.addEventListener("click",(e)=>{
+    e.preventDefault();
+    setPage(a.dataset.page);
+  });
 });
 function setPage(page){
   document.querySelectorAll(".nav a").forEach(x=>x.classList.toggle("active", x.dataset.page===page));
@@ -510,225 +409,390 @@ function setPage(page){
   renderAll();
 }
 
-/** ========== SERVICES SELECT ========== */
+/* =========================
+   SERVICES SELECT + AUTO PRICE
+========================= */
 function getServiceById(id){ return state.services.find(s=>s.id===id) || null; }
-function getAllServices(){ return state.services.slice().sort((a,b)=>a.name.localeCompare(b.name)); }
+function sortedServices(){ return state.services.slice().sort((a,b)=>a.name.localeCompare(b.name)); }
 
-function setServiceSelects(){
-  const services = getAllServices();
-  const opt = services.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
-  $("serviceSelect").innerHTML = opt;
-  $("qcService").innerHTML = opt;
-  fillAutoPrice();
+function setServiceSelect(){
+  const opt = sortedServices().map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
+  $("qService").innerHTML = opt;
+  // fill price
+  const s = getServiceById(Number($("qService").value));
+  $("qPrice").value = s ? s.price : "";
 }
-function fillAutoPrice(){
-  const s1 = getServiceById(Number($("qcService").value)); if(s1) $("qcPrice").value = s1.price;
-  const s2 = getServiceById(Number($("serviceSelect").value)); if(s2) $("priceInput").value = s2.price;
+$("qService").addEventListener("change", ()=>{
+  const s = getServiceById(Number($("qService").value));
+  $("qPrice").value = s ? s.price : "";
+});
+
+/* =========================
+   CART (price override allowed)
+========================= */
+function cartLineTotal(line){
+  const svc = getServiceById(line.serviceId);
+  if(!svc) return 0;
+  const p = Number.isFinite(line.priceOverride) ? line.priceOverride : svc.price;
+  return Number(p||0);
 }
-$("qcService").addEventListener("change", fillAutoPrice);
-$("serviceSelect").addEventListener("change", fillAutoPrice);
-
-/** ========== CART ========== */
-function cartTotal(cart){
-  return cart.reduce((sum,id)=>sum + (getServiceById(id)?.price || 0), 0);
+function cartServiceTotal(){
+  return state.cart.reduce((sum,line)=>sum + cartLineTotal(line), 0);
 }
-function renderCart(isQuick){
-  const cartKey = isQuick ? "quick" : "full";
-  const cart = state.carts[cartKey];
-
-  const host = isQuick ? $("qcCart") : $("custCart");
-  const totalEl = isQuick ? $("qcTotal") : $("custTotal");
-  totalEl.textContent = money(cartTotal(cart));
-
-  if(cart.length===0){
+function renderCart(){
+  $("cartTotal").textContent = vnd(cartServiceTotal());
+  const host = $("cartBox");
+  if(state.cart.length===0){
     host.innerHTML = `<div class="muted">Chưa có dịch vụ nào.</div>`;
     return;
   }
-
-  host.innerHTML = cart.map((id,idx)=>{
-    const s = getServiceById(id);
+  host.innerHTML = state.cart.map((line,idx)=>{
+    const svc = getServiceById(line.serviceId);
+    const price = cartLineTotal(line);
     return `
       <div class="cartItem">
         <div class="cartLeft">
-          <div class="cartTitle">${esc(s?.name || "Unknown")}</div>
-          <div class="cartMeta">Skill tag: <b>${esc(s?.skill || "-")}</b> • Price: <b>${money(s?.price||0)}</b></div>
+          <div class="cartTitle">${esc(svc?.name || "Unknown")}</div>
+          <div class="cartMeta">Skill tag: <b>${esc(svc?.skill||"-")}</b> • Price: <b>${vnd(price)}</b></div>
         </div>
-        <button class="btn ghost" onclick="removeFromCart(${isQuick?'true':'false'}, ${idx})">Remove</button>
+        <button class="btn ghost" onclick="removeFromCart(${idx})">Remove</button>
       </div>
     `;
   }).join("");
 }
-function addToCart(isQuick){
-  const sel = isQuick ? $("qcService") : $("serviceSelect");
-  const priceBox = isQuick ? $("qcPrice") : $("priceInput");
-  const cartKey = isQuick ? "quick" : "full";
-
-  const id = Number(sel.value);
+function addToCart(){
+  const id = Number($("qService").value);
   const svc = getServiceById(id);
   if(!svc) return;
 
-  // allow editing price on the fly (optional)
-  const edited = Number(priceBox.value);
-  if(Number.isFinite(edited) && edited>0 && edited!==svc.price){
-    svc.price = edited;
-  }
+  const edited = Number($("qPrice").value);
+  if(!Number.isFinite(edited) || edited<=0) return alert("Giá không hợp lệ.");
 
-  state.carts[cartKey].push(id);
+  // store price override if edited differs
+  const line = { serviceId:id };
+  if(edited !== svc.price) line.priceOverride = edited;
+
+  state.cart.push(line);
   saveState();
   renderAll();
 }
-function removeFromCart(isQuick, index){
-  const cartKey = isQuick ? "quick" : "full";
-  state.carts[cartKey].splice(index,1);
+function removeFromCart(index){
+  state.cart.splice(index,1);
+  saveState();
+  renderAll();
+}
+function clearCart(){
+  state.cart = [];
   saveState();
   renderAll();
 }
 
-/** ========== ELIGIBILITY / AUTO ASSIGN ========== */
-function staffHasSkill(staff, skillTag){
-  // contains match (để "wax (all)" match "wax")
+/* =========================
+   MATCHING STAFF
+========================= */
+function staffMatchesSkill(staff, skillTag){
   const tag = norm(skillTag);
+  // contains match: wax(all) match wax
   return staff.skills.some(sk => norm(sk).includes(tag));
 }
-function eligibleStaffForCart(cart){
-  const needed = cart.map(id=>getServiceById(id)?.skill).filter(Boolean);
+function neededSkillTagsFromCart(){
+  const tags = state.cart.map(line=>{
+    const svc = getServiceById(line.serviceId);
+    return svc?.skill;
+  }).filter(Boolean);
+  // unique
+  return Array.from(new Set(tags.map(norm))).map(t=>t);
+}
+function eligibleStaff(){
+  const tags = neededSkillTagsFromCart();
   return state.staff.filter(st=>{
-    if(st.status!=="available") return false; // exclude busy + break
-    return needed.every(tag => staffHasSkill(st, tag));
+    if(st.status!=="available") return false;
+    // must match all tags in cart
+    return tags.every(t => staffMatchesSkill(st, t));
   });
 }
-function suggestStaff(cart){
-  const total = cartTotal(cart);
-  const list = eligibleStaffForCart(cart).map(st=>({
-    ...st,
-    projected: st.total + total
-  })).sort((a,b)=>a.projected - b.projected); // lowest projected first
-  return list;
-}
-function renderSuggest(isQuick){
-  const cartKey = isQuick ? "quick" : "full";
-  const cart = state.carts[cartKey];
-  const host = isQuick ? $("qcSuggest") : null;
-  if(!host) return;
 
-  if(cart.length===0){
-    host.innerHTML = `<div class="muted">Thêm dịch vụ vào cart để gợi ý thợ.</div>`;
+// auto-balance based on service revenue only
+function pickAutoStaff(){
+  const list = eligibleStaff();
+  if(list.length===0) return null;
+  // projected after taking this job
+  const serviceTotal = cartServiceTotal();
+  list.sort((a,b)=>(a.serviceRevenue + serviceTotal) - (b.serviceRevenue + serviceTotal));
+  return list[0];
+}
+
+function renderEligibleStaff(){
+  const list = eligibleStaff();
+  $("eligibleCount").textContent = `${list.length} eligible`;
+
+  const grid = $("eligibleGrid");
+  if(state.cart.length===0){
+    grid.innerHTML = `<div class="muted">Thêm dịch vụ vào cart để hiện danh sách nhân viên phù hợp.</div>`;
     return;
   }
-  const list = suggestStaff(cart);
   if(list.length===0){
-    host.innerHTML = `<div class="muted">Không có thợ Available match đủ skill (hoặc đang Break).</div>`;
+    grid.innerHTML = `<div class="muted">Không có thợ Available match đủ skill (hoặc đang Break).</div>`;
     return;
   }
-  host.innerHTML = list.slice(0,6).map(st=>`
-    <div class="staffCard" onclick="openStaffModal(${st.id})" style="cursor:pointer;">
-      <div class="row">
-        <div class="name">${esc(st.name)}</div>
-        <span class="badge">Available</span>
+
+  const serviceTotal = cartServiceTotal();
+  grid.innerHTML = list.map(st=>{
+    const projected = st.serviceRevenue + serviceTotal;
+    const badge = `<span class="badge">Available</span>`;
+    return `
+      <div class="staffCard" onclick="manualAssign(${st.id})">
+        <div class="row">
+          <div class="name">${esc(st.name)}</div>
+          ${badge}
+        </div>
+        <div class="miniRow">
+          <div class="mini"><div class="mLabel">Service Revenue</div><div class="mVal">${vnd(st.serviceRevenue)}</div></div>
+          <div class="mini"><div class="mLabel">Tip</div><div class="mVal">${vnd(st.tipRevenue)}</div></div>
+          <div class="mini"><div class="mLabel">Projected (service)</div><div class="mVal">${vnd(projected)}</div></div>
+        </div>
+        <div class="skills">
+          ${st.skills.slice(0,8).map(sk=>`<span class="chip">${esc(sk)}</span>`).join("")}
+          ${st.skills.length>8 ? `<span class="chip">+${st.skills.length-8}</span>` : ``}
+        </div>
+        <div class="muted" style="margin-top:8px;">Click để assign thủ công</div>
       </div>
-      <div class="muted" style="margin-top:6px;">
-        Income hiện tại: <b>${money(st.total)}</b><br/>
-        Projected sau job: <b>${money(st.projected)}</b>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
-function autoAssignFromCart(isQuick){
-  const cartKey = isQuick ? "quick" : "full";
-  const cart = state.carts[cartKey];
+/* =========================
+   ASSIGN + DONE (with TIP)
+========================= */
+function askCustomerName(){
+  const name = prompt("Nhập tên khách (có thể bỏ trống):", "");
+  return (name ?? "").trim();
+}
 
-  const nameEl = isQuick ? $("qcName") : $("custName");
-  const msgEl = isQuick ? $("qcMsg") : $("msg");
-  const modeEl = isQuick ? null : $("assignMode");
+function doAssignToStaff(staffId, modeLabel){
+  if(state.cart.length===0) return $("qMsg").textContent = "Cart trống. Add dịch vụ trước nha.";
 
-  const customer = nameEl.value.trim();
-  if(!customer) return msgEl.textContent = "Nhập tên khách trước nha.";
-  if(cart.length===0) return msgEl.textContent = "Cart đang trống. Add dịch vụ trước nha.";
+  const st = state.staff.find(x=>x.id===staffId);
+  if(!st) return;
+  if(st.status!=="available") return $("qMsg").textContent = "Thợ không Available.";
 
-  const total = cartTotal(cart);
+  const customer = askCustomerName();
+  const serviceTotal = cartServiceTotal();
 
-  let chosen = null;
-  if(!isQuick && modeEl.value==="manual"){
-    const pick = Number($("manualStaff").value);
-    const st = state.staff.find(x=>x.id===pick);
-    if(!st) return msgEl.textContent = "Chọn thợ trước nha.";
-    if(st.status!=="available") return msgEl.textContent = "Thợ không Available.";
-    const needed = cart.map(id=>getServiceById(id)?.skill).filter(Boolean);
-    if(!needed.every(tag=>staffHasSkill(st, tag))) return msgEl.textContent = "Thợ không match đủ skill trong cart.";
-    chosen = st;
-  }else{
-    const list = suggestStaff(cart);
-    if(list.length===0) return msgEl.textContent = "Không có thợ Available match đủ skill (hoặc đang Break).";
-    chosen = state.staff.find(x=>x.id===list[0].id);
-  }
-
-  // assign
-  chosen.status = "busy";
-  chosen.current = { customer, cart: cart.slice(), total };
+  st.status = "busy";
+  st.current = {
+    customer,
+    cart: structuredClone(state.cart),
+    serviceTotal,
+    tip: 0,
+    payment: "Cash",
+    fee: 0,
+    gross: serviceTotal
+  };
 
   state.jobs.push({
     customer,
-    services: cart.slice(),
-    total,
-    staffId: chosen.id,
+    staffId: st.id,
+    cart: structuredClone(state.cart),
+    serviceTotal,
+    tip: 0,
+    payment: "Cash",
+    fee: 0,
+    gross: serviceTotal,
     status:"In progress",
     ts: Date.now()
   });
 
-  // clear cart + input
-  state.carts[cartKey] = [];
-  nameEl.value = "";
-  msgEl.textContent = `Đã gán khách ${customer} cho thợ ${chosen.name}. Total: ${money(total)}`;
-
+  state.cart = [];
+  $("qMsg").textContent = `✅ Assigned (${modeLabel}) cho thợ ${st.name}. Service total: ${vnd(serviceTotal)}`;
   saveState();
   renderAll();
 }
 
-/** ========== DONE ========== */
-function markDone(staffId){
-  const s = state.staff.find(x=>x.id===staffId);
-  if(!s || !s.current) return;
+function manualAssign(staffId){
+  doAssignToStaff(staffId, "Manual");
+}
+function autoAssign(){
+  const pick = pickAutoStaff();
+  if(!pick) return $("qMsg").textContent = "❌ Không có thợ Available match đủ skill (hoặc đang Break).";
+  doAssignToStaff(pick.id, "Auto-balance");
+}
 
-  s.total += Number(s.current.total||0);
-  s.jobsDone += 1;
+function updateJobDone(staffId, tip, payment, fee){
+  const st = state.staff.find(x=>x.id===staffId);
+  if(!st || !st.current) return;
 
+  // update staff totals
+  st.serviceRevenue += Number(st.current.serviceTotal||0);
+  st.tipRevenue += Number(tip||0);
+  st.jobsDone += 1;
+
+  // mark last in-progress job for this staff
   for(let i=state.jobs.length-1;i>=0;i--){
-    if(state.jobs[i].staffId===staffId && state.jobs[i].status==="In progress"){
-      state.jobs[i].status="Done";
+    const j = state.jobs[i];
+    if(j.staffId===staffId && j.status==="In progress"){
+      j.status = "Done";
+      j.tip = tip;
+      j.payment = payment;
+      j.fee = fee;
+      j.gross = Number(j.serviceTotal||0) + Number(tip||0) + Number(fee||0);
       break;
     }
   }
 
-  s.current = null;
-  s.status = "available";
+  // clear current & set available
+  st.current = null;
+  st.status = "available";
+
   saveState();
   renderAll();
 }
 
-/** ========== MANUAL PICK ========== */
-function refreshManualPick(){
-  const cart = state.carts.full;
-  const list = eligibleStaffForCart(cart);
-  $("manualStaff").innerHTML = list.map(s=>`<option value="${s.id}">${esc(s.name)} (${money(s.total)})</option>`).join("");
-}
-$("assignMode").addEventListener("change", ()=>{
-  const manual = $("assignMode").value==="manual";
-  $("manualPickWrap").classList.toggle("hide", !manual);
-  if(manual) refreshManualPick();
-});
+function markDone(staffId){
+  const st = state.staff.find(x=>x.id===staffId);
+  if(!st || !st.current) return;
 
-/** ========== EMPLOYEE CRUD ========== */
+  // ask tip
+  const tipRaw = prompt("Nhập tiền tip (VNĐ). Nếu không có, để 0:", "0");
+  const tip = Math.max(0, Number(tipRaw||0) || 0);
+
+  // payment method (fee rule optional)
+  const payment = prompt("Payment method? (Cash / Card / QR / E-wallet)", "Cash") || "Cash";
+  const pm = payment.trim();
+
+  // Optional: fee 5% for non-cash (you can turn this off later)
+  // If you don't want fee: set fee = 0 always.
+  let fee = 0;
+  const isNonCash = !/cash/i.test(pm);
+  if(isNonCash){
+    const confirmFee = confirm("Áp dụng phí xử lý 5% cho Card/QR/E-wallet?");
+    if(confirmFee){
+      fee = Math.round((Number(st.current.serviceTotal||0) + tip) * 0.05);
+    }
+  }
+
+  updateJobDone(staffId, tip, pm, fee);
+}
+
+/* =========================
+   NOW SERVING
+========================= */
+function renderNowServing(){
+  const busy = state.staff.filter(s=>s.status==="busy" && s.current);
+  const host = $("nowServing");
+  if(busy.length===0){
+    host.innerHTML = `<div class="muted">Chưa có ai đang phục vụ.</div>`;
+    return;
+  }
+  host.innerHTML = busy.map(s=>{
+    const services = (s.current.cart||[]).map(line=>{
+      const svc = getServiceById(line.serviceId);
+      const price = cartLineTotal(line);
+      return `${svc?.name || "Unknown"} (${vnd(price)})`;
+    }).join(" • ");
+    return `
+      <div class="staffCard" style="cursor:default;">
+        <div class="row">
+          <div class="name">${esc(s.name)}</div>
+          <span class="badge busy">Busy</span>
+        </div>
+        <div class="muted" style="margin-top:6px;">
+          Khách: <b>${esc(s.current.customer || "—")}</b><br/>
+          Service total: <b>${vnd(s.current.serviceTotal)}</b><br/>
+          Services: ${esc(services)}
+        </div>
+        <div style="margin-top:10px;">
+          <button class="btn ghost" onclick="markDone(${s.id})">Done (Ask tip)</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =========================
+   DASHBOARD ANALYTICS
+========================= */
+function renderKPI(){
+  const serviceSum = state.staff.reduce((a,s)=>a+s.serviceRevenue,0);
+  const tipSum = state.staff.reduce((a,s)=>a+s.tipRevenue,0);
+  const gross = serviceSum + tipSum;
+
+  const n = state.staff.length || 1;
+  const targetService = serviceSum / n;
+
+  const busy = state.staff.filter(s=>s.status==="busy").length;
+  const brk = state.staff.filter(s=>s.status==="break").length;
+
+  const cards = [
+    {label:"Service Revenue", value:vnd(serviceSum), sub:`Target/staff: ${vnd(targetService)}`},
+    {label:"Tip Total", value:vnd(tipSum), sub:"Tách riêng để chốt cuối ngày"},
+    {label:"Gross (Service+Tip)", value:vnd(gross), sub:"Chưa tính fee nếu có"},
+    {label:"Staff Status", value:`Busy ${busy} • Break ${brk}`, sub:`Available ${state.staff.length-busy-brk}`},
+    {label:"Jobs Done", value:String(state.jobs.filter(j=>j.status==="Done").length), sub:`In progress ${state.jobs.filter(j=>j.status==="In progress").length}`},
+    {label:"Services", value:String(state.services.length), sub:"Trong catalog"},
+  ];
+  $("kpiGrid").innerHTML = cards.map(c=>`
+    <div class="kpi">
+      <div class="label">${esc(c.label)}</div>
+      <div class="value">${esc(c.value)}</div>
+      <div class="sub">${esc(c.sub||"")}</div>
+    </div>
+  `).join("");
+}
+
+function renderBalanceBoard(){
+  const serviceSum = state.staff.reduce((a,s)=>a+s.serviceRevenue,0);
+  const target = serviceSum / (state.staff.length||1);
+
+  let list = [...state.staff];
+  const sort = state.ui.balanceSort;
+  if(sort==="gap"){
+    list.sort((a,b)=>Math.abs(b.serviceRevenue-target)-Math.abs(a.serviceRevenue-target));
+  }else if(sort==="service"){
+    list.sort((a,b)=>b.serviceRevenue-a.serviceRevenue);
+  }else{
+    list.sort((a,b)=>a.name.localeCompare(b.name));
+  }
+
+  $("balanceBody").innerHTML = list.map(s=>{
+    const gap = s.serviceRevenue - target;
+    const badge = s.status==="available" ? `<span class="badge">Available</span>`
+      : (s.status==="break" ? `<span class="badge break">Break</span>` : `<span class="badge busy">Busy</span>`);
+    const gross = s.serviceRevenue + s.tipRevenue;
+    const gapStyle = gap>=0 ? "style='color:var(--bad);font-weight:1000'" : "style='color:var(--good);font-weight:1000'";
+    return `
+      <tr>
+        <td><b>${esc(s.name)}</b></td>
+        <td>${badge}</td>
+        <td><b>${vnd(s.serviceRevenue)}</b></td>
+        <td>${vnd(s.tipRevenue)}</td>
+        <td><b>${vnd(gross)}</b></td>
+        <td ${gapStyle}>${gap>=0?"+":""}${vnd(gap)}</td>
+        <td>${s.jobsDone}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function toggleBalanceSort(){
+  const v = state.ui.balanceSort;
+  state.ui.balanceSort = (v==="gap") ? "service" : (v==="service" ? "name" : "gap");
+  saveState(); renderAll();
+}
+
+/* =========================
+   EMPLOYEES CRUD (simple list)
+========================= */
 function parseSkills(text){
-  const t = String(text||"").trim();
-  if(!t) return [];
-  const parts = t.split(/\n|,/).map(x=>x.trim()).filter(Boolean);
+  const parts = String(text||"").split(/\n|,/).map(x=>x.trim()).filter(Boolean);
   return Array.from(new Set(parts));
 }
 function clearEmpForm(){
-  $("empId").value=""; $("empName").value=""; $("empSkills").value="";
-  $("empStatus").value="available"; $("empCommission").value="";
-  $("editHint").textContent="Thêm mới hoặc click thợ để sửa";
+  $("empId").value="";
+  $("empName").value="";
+  $("empSkills").value="";
+  $("empStatus").value="available";
+  $("empCommission").value="";
 }
 function saveEmployee(){
   const idRaw = $("empId").value;
@@ -741,55 +805,81 @@ function saveEmployee(){
   if(skills.length===0) return alert("Nhập ít nhất 1 skill.");
 
   if(idRaw){
-    const emp = state.staff.find(s=>s.id===Number(idRaw));
-    if(!emp) return;
-    emp.name=name; emp.skills=skills;
-    if(emp.status!=="busy") emp.status=status;
-    emp.commission = Number.isFinite(commission)?commission:null;
+    const st = state.staff.find(s=>s.id===Number(idRaw));
+    if(!st) return;
+    st.name = name;
+    st.skills = skills;
+    if(st.status!=="busy") st.status = status;
+    st.commission = Number.isFinite(commission)?commission:null;
   }else{
     const newId = Math.max(0,...state.staff.map(s=>s.id))+1;
-    state.staff.push({id:newId,name,skills,status,commission:Number.isFinite(commission)?commission:null,total:0,jobsDone:0,current:null});
+    state.staff.push({
+      id:newId, name, skills, status,
+      serviceRevenue:0, tipRevenue:0, jobsDone:0, current:null, commission:Number.isFinite(commission)?commission:null
+    });
   }
   saveState(); clearEmpForm(); renderAll();
 }
-function loadEmployeeToForm(){
-  const s = state.staff.find(x=>x.id===selectedStaffId);
-  if(!s) return;
-  setPage("employees");
-  $("empId").value=s.id;
-  $("empName").value=s.name;
-  $("empSkills").value=s.skills.join(", ");
-  $("empStatus").value=(s.status==="busy")?"available":s.status;
-  $("empCommission").value=s.commission ?? "";
-  $("editHint").textContent="Đang edit: "+s.name;
-  hideModal();
+function editEmployee(id){
+  const st = state.staff.find(s=>s.id===id);
+  if(!st) return;
+  $("empId").value = st.id;
+  $("empName").value = st.name;
+  $("empSkills").value = st.skills.join(", ");
+  $("empStatus").value = (st.status==="busy") ? "available" : st.status;
+  $("empCommission").value = st.commission ?? "";
 }
-function deleteEmployee(){
-  const s = state.staff.find(x=>x.id===selectedStaffId);
-  if(!s) return;
-  if(s.status==="busy") return alert("Thợ đang Busy, bấm Done trước.");
-  if(confirm(`Xoá thợ "${s.name}"?`)){
-    state.staff = state.staff.filter(x=>x.id!==selectedStaffId);
-    saveState(); hideModal(); renderAll();
+function toggleBreakEmp(id){
+  const st = state.staff.find(s=>s.id===id);
+  if(!st) return;
+  if(st.status==="busy") return alert("Thợ đang Busy.");
+  st.status = (st.status==="break") ? "available" : "break";
+  saveState(); renderAll();
+}
+function deleteEmp(id){
+  const st = state.staff.find(s=>s.id===id);
+  if(!st) return;
+  if(st.status==="busy") return alert("Thợ đang Busy.");
+  if(confirm(`Xoá thợ "${st.name}"?`)){
+    state.staff = state.staff.filter(s=>s.id!==id);
+    saveState(); renderAll();
   }
 }
-function toggleBreak(){
-  const s = state.staff.find(x=>x.id===selectedStaffId);
-  if(!s) return;
-  if(s.status==="busy") return alert("Thợ đang Busy. Done trước rồi mới Break.");
-  s.status = (s.status==="break") ? "available" : "break";
-  saveState(); renderAll(); openStaffModal(selectedStaffId);
+function renderEmployees(){
+  const host = $("staffList");
+  host.innerHTML = state.staff.map(st=>{
+    const badge = st.status==="available" ? `<span class="badge">Available</span>` :
+      (st.status==="break" ? `<span class="badge break">Break</span>` : `<span class="badge busy">Busy</span>`);
+    return `
+      <div class="cartItem">
+        <div class="cartLeft">
+          <div class="cartTitle">${esc(st.name)} ${badge}</div>
+          <div class="cartMeta">Skills: ${esc(st.skills.join(", "))}</div>
+          <div class="cartMeta">Service: <b>${vnd(st.serviceRevenue)}</b> • Tip: <b>${vnd(st.tipRevenue)}</b></div>
+        </div>
+        <div class="row" style="gap:8px;">
+          <button class="btn ghost" onclick="editEmployee(${st.id})">Edit</button>
+          <button class="btn ghost" onclick="toggleBreakEmp(${st.id})">Break</button>
+          <button class="btn danger" onclick="deleteEmp(${st.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
-/** ========== SERVICE CRUD ========== */
-function clearServiceForm(){ $("svName").value=""; $("svSkill").value=""; $("svPrice").value=""; }
+/* =========================
+   SERVICES CRUD
+========================= */
+function clearServiceForm(){
+  $("svName").value=""; $("svSkill").value=""; $("svPrice").value="";
+}
 function saveService(){
   const name = $("svName").value.trim();
   const skill = $("svSkill").value.trim();
   const price = Number($("svPrice").value);
   if(!name) return alert("Nhập tên service.");
   if(!skill) return alert("Nhập skill tag.");
-  if(!Number.isFinite(price) || price<=0) return alert("Price không hợp lệ.");
+  if(!Number.isFinite(price) || price<=0) return alert("Giá không hợp lệ.");
 
   const existing = state.services.find(s=>norm(s.name)===norm(name));
   if(existing){
@@ -804,228 +894,52 @@ function saveService(){
 function deleteService(id){
   if(confirm("Xoá service này?")){
     state.services = state.services.filter(s=>s.id!==id);
-    // remove from carts if any
-    state.carts.quick = state.carts.quick.filter(x=>x!==id);
-    state.carts.full  = state.carts.full.filter(x=>x!==id);
+    state.cart = state.cart.filter(line=>line.serviceId!==id);
     saveState(); renderAll();
   }
 }
-function seedFromMenu(){
-  // seed thêm vài mục (bạn có thể bấm nhiều lần, code sẽ tránh trùng theo name)
-  const add = (name, skill, price)=>{
-    const exists = state.services.some(s=>norm(s.name)===norm(name));
-    if(!exists){
-      const newId = Math.max(0,...state.services.map(s=>s.id))+1;
-      state.services.push({id:newId,name,skill,price});
-    }
-  };
-  add("Wax: Vùng nách (Nữ)", "wax", 165000);
-  add("Wax: Vùng nách (Nam)", "wax", 248000);
-  add("Massage tay/chân 15 phút", "spa", 175000);
-  add("Massage tay/chân 30 phút", "spa", 325000);
-  saveState(); renderAll();
-  alert("Seed thêm vài dịch vụ từ menu (bạn có thể chỉnh lại tên/giá).");
-}
-
-/** ========== ANALYTICS / RENDER ========== */
-function renderKPI(){
-  const totalRevenue = state.staff.reduce((sum,s)=>sum+s.total,0);
-  const n = state.staff.length || 1;
-  const target = totalRevenue / n;
-  const busy = state.staff.filter(s=>s.status==="busy").length;
-  const brk = state.staff.filter(s=>s.status==="break").length;
-  const top = [...state.staff].sort((a,b)=>b.total-a.total)[0];
-  const low = [...state.staff].sort((a,b)=>a.total-b.total)[0];
-  const done = state.jobs.filter(j=>j.status==="Done").length;
-  const inprog = state.jobs.filter(j=>j.status==="In progress").length;
-
-  const cards = [
-    {label:"Total Revenue", value:money(totalRevenue), sub:`Target/staff: ${money(target)}`},
-    {label:"Staff Status", value:`Busy ${busy} • Break ${brk}`, sub:`Available ${state.staff.length-busy-brk}`},
-    {label:"Top Income", value: top?esc(top.name):"-", sub: top?money(top.total):""},
-    {label:"Lowest Income", value: low?esc(low.name):"-", sub: low?money(low.total):""},
-    {label:"Jobs", value:`Done ${done}`, sub:`In progress ${inprog}`},
-    {label:"Services", value:String(state.services.length), sub:"Trong Service Catalog"},
-  ];
-  $("kpiGrid").innerHTML = cards.map(c=>`
-    <div class="kpi">
-      <div class="label">${esc(c.label)}</div>
-      <div class="value">${c.value}</div>
-      <div class="sub">${esc(c.sub||"")}</div>
-    </div>
-  `).join("");
-}
-
-function renderBalanceBoard(){
-  const totalRevenue = state.staff.reduce((sum,s)=>sum+s.total,0);
-  const target = totalRevenue / (state.staff.length||1);
-
-  let list = [...state.staff];
-  const sort = state.ui.balanceSort;
-  if(sort==="gap"){
-    list.sort((a,b)=>Math.abs(b.total-target)-Math.abs(a.total-target));
-  }else if(sort==="income"){
-    list.sort((a,b)=>b.total-a.total);
-  }else{
-    list.sort((a,b)=>a.name.localeCompare(b.name));
-  }
-
-  $("balanceBody").innerHTML = list.map(s=>{
-    const gap = s.total - target;
-    const cls = gap>=0 ? "style='color:var(--bad);font-weight:1000'" : "style='color:var(--good);font-weight:1000'";
-    const avg = s.jobsDone>0 ? (s.total/s.jobsDone) : 0;
-    const badge = s.status==="available" ? `<span class="badge">Available</span>`
-      : (s.status==="break" ? `<span class="badge break">Break</span>` : `<span class="badge busy">Busy</span>`);
-    return `
-      <tr>
-        <td><b style="cursor:pointer" onclick="openStaffModal(${s.id})">${esc(s.name)}</b></td>
-        <td>${badge}</td>
-        <td><b>${money(s.total)}</b></td>
-        <td ${cls}>${gap>=0?"+":""}${money(gap)}</td>
-        <td>${s.jobsDone}</td>
-        <td>${money(avg)}</td>
-      </tr>
-    `;
-  }).join("");
-}
-function toggleBalanceSort(){
-  const v = state.ui.balanceSort;
-  state.ui.balanceSort = (v==="gap") ? "income" : (v==="income" ? "name" : "gap");
-  saveState(); renderAll();
-}
-
-function renderNowServing(){
-  const busy = state.staff.filter(s=>s.status==="busy" && s.current);
-  if(busy.length===0){
-    $("nowServing").innerHTML = `<div class="muted">Chưa có ai đang phục vụ.</div>`;
-    return;
-  }
-  $("nowServing").innerHTML = busy.map(s=>{
-    const svcNames = (s.current.cart||[]).map(id=>getServiceById(id)?.name).filter(Boolean);
-    return `
-      <div class="staffCard" style="cursor:default;">
-        <div class="row">
-          <div class="name">${esc(s.name)}</div>
-          <span class="badge busy">Busy</span>
-        </div>
-        <div class="muted" style="margin-top:6px;">
-          Khách: <b>${esc(s.current.customer)}</b><br/>
-          Total: <b>${money(s.current.total)}</b><br/>
-          Services: ${esc(svcNames.join(" • "))}
-        </div>
-        <div style="margin-top:10px;">
-          <button class="btn ghost" onclick="markDone(${s.id})">Done</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderStaffCards(){
-  $("staffGrid").innerHTML = state.staff.map(s=>{
-    const badge = s.status==="available" ? `<span class="badge">Available</span>`
-      : (s.status==="break" ? `<span class="badge break">Break</span>` : `<span class="badge busy">Busy</span>`);
-    const avg = s.jobsDone>0 ? (s.total/s.jobsDone) : 0;
-    return `
-      <div class="staffCard" onclick="openStaffModal(${s.id})">
-        <div class="row">
-          <div class="name">${esc(s.name)}</div>
-          ${badge}
-        </div>
-        <div class="skills">Skills: ${esc(s.skills.join(", "))}</div>
-        <div class="miniRow">
-          <div class="mini"><div class="mLabel">Income</div><div class="mVal">${money(s.total)}</div></div>
-          <div class="mini"><div class="mLabel">Jobs Done</div><div class="mVal">${s.jobsDone}</div></div>
-          <div class="mini"><div class="mLabel">Avg Ticket</div><div class="mVal">${money(avg)}</div></div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
 function renderServices(){
-  const list = getAllServices();
+  const list = sortedServices();
   $("svCount").textContent = `${list.length} services`;
   $("svBody").innerHTML = list.map(s=>`
     <tr>
       <td>${esc(s.name)}</td>
       <td><b>${esc(s.skill)}</b></td>
-      <td>${money(s.price)}</td>
+      <td>${vnd(s.price)}</td>
       <td><button class="btn ghost" onclick="deleteService(${s.id})">Delete</button></td>
     </tr>
   `).join("");
 }
 
+/* =========================
+   JOBS TABLE
+========================= */
 function renderJobs(){
   $("jobsBody").innerHTML = state.jobs.slice().reverse().map(j=>{
-    const stName = state.staff.find(s=>s.id===j.staffId)?.name || "";
-    const svcNames = (j.services||[]).map(id=>getServiceById(id)?.name).filter(Boolean).join(" • ");
+    const st = state.staff.find(s=>s.id===j.staffId);
+    const svcNames = (j.cart||[]).map(line=>{
+      const svc = getServiceById(line.serviceId);
+      const price = cartLineTotal(line);
+      return `${svc?.name || "Unknown"} (${vnd(price)})`;
+    }).join(" • ");
     return `
       <tr>
-        <td>${esc(j.customer)}</td>
+        <td>${esc(j.customer||"")}</td>
         <td>${esc(svcNames)}</td>
-        <td><b>${money(j.total)}</b></td>
-        <td>${esc(stName)}</td>
-        <td>${esc(j.status)}</td>
+        <td><b>${vnd(j.serviceTotal||0)}</b></td>
+        <td>${vnd(j.tip||0)}</td>
+        <td><b>${vnd((j.gross||0))}</b></td>
+        <td>${esc(j.payment||"")}${j.fee?` (+${vnd(j.fee)})`:``}</td>
+        <td>${esc(st?.name || "")}</td>
+        <td>${esc(j.status||"")}</td>
       </tr>
     `;
   }).join("");
 }
 
-/** ========== MODAL ========== */
-function openStaffModal(id){
-  const s = state.staff.find(x=>x.id===id);
-  if(!s) return;
-  selectedStaffId = id;
-
-  const totalRevenue = state.staff.reduce((sum,x)=>sum+x.total,0);
-  const target = totalRevenue / (state.staff.length || 1);
-  const gap = s.total - target;
-
-  $("mName").textContent = s.name;
-  $("mSub").textContent = `Income: ${money(s.total)} • Jobs Done: ${s.jobsDone}`;
-
-  $("mStatusChip").innerHTML =
-    s.status==="available" ? `<span class="chip good">● Available</span>` :
-    (s.status==="break" ? `<span class="chip warn">● Break</span>` : `<span class="chip bad">● Busy</span>`);
-
-  const avg = s.jobsDone>0 ? (s.total/s.jobsDone) : 0;
-
-  $("mKpi").innerHTML = [
-    ["Total Income", money(s.total)],
-    ["Gap vs Target", (gap>=0?"+":"")+money(gap)],
-    ["Jobs Done", String(s.jobsDone)],
-    ["Avg Ticket", money(avg)],
-    ["Commission", s.commission==null ? "—" : `${s.commission}%`],
-    ["Status", s.status],
-  ].map(([k,v])=>`
-    <div class="kpi" style="box-shadow:none;">
-      <div class="label">${esc(k)}</div>
-      <div class="value">${esc(v)}</div>
-      <div class="sub"></div>
-    </div>
-  `).join("");
-
-  $("mSkills").innerHTML = s.skills.map(sk=>`<span class="chip">${esc(sk)}</span>`).join("");
-
-  if(s.status==="busy" && s.current){
-    $("mNow").innerHTML = `Đang làm cho <b>${esc(s.current.customer)}</b><br/>Total: <b>${money(s.current.total)}</b>`;
-  }else if(s.status==="break"){
-    $("mNow").innerHTML = `Đang <b>Break</b>. Auto-assign sẽ bỏ qua bạn này.`;
-  }else{
-    $("mNow").innerHTML = `Đang <b>Available</b>.`;
-  }
-
-  const recent = state.jobs.filter(j=>j.staffId===id).slice().sort((a,b)=>b.ts-a.ts).slice(0,8);
-  $("mJobs").innerHTML = recent.length
-    ? recent.map(j=>`<tr><td>${esc(j.customer)}</td><td><b>${money(j.total)}</b></td><td>${esc(j.status)}</td></tr>`).join("")
-    : `<tr><td colspan="3" class="muted">Chưa có job nào.</td></tr>`;
-
-  $("modalOverlay").classList.remove("hide");
-}
-function hideModal(){ $("modalOverlay").classList.add("hide"); }
-
-/** ========== EXPORT/IMPORT/RESET ========== */
+/* =========================
+   EXPORT/IMPORT/RESET
+========================= */
 function exportJSON(){
   const data = JSON.stringify(state, null, 2);
   const blob = new Blob([data], {type:"application/json"});
@@ -1038,46 +952,47 @@ function importJSON(){
   const input=document.createElement("input");
   input.type="file"; input.accept="application/json";
   input.onchange=()=>{
-    const file=input.files?.[0]; if(!file) return;
+    const f=input.files?.[0]; if(!f) return;
     const r=new FileReader();
     r.onload=()=>{
       try{
         const parsed=JSON.parse(String(r.result||""));
         if(!parsed.staff || !parsed.services) throw new Error("bad");
         state=parsed;
+        state.cart ||= [];
         state.jobs ||= [];
-        state.carts ||= { quick:[], full:[] };
-        state.ui ||= { balanceSort:"gap" };
+        state.ui ||= {balanceSort:"gap"};
         saveState(); renderAll(); alert("Import OK!");
       }catch{ alert("File không hợp lệ."); }
     };
-    r.readAsText(file);
+    r.readAsText(f);
   };
   input.click();
 }
 function resetDay(){
-  if(!confirm("Reset toàn bộ doanh thu + jobs hôm nay?")) return;
-  state = defaultState(); saveState(); renderAll();
+  if(!confirm("Reset doanh thu + jobs hôm nay?")) return;
+  state = defaultState();
+  saveState();
+  renderAll();
 }
 
-/** ========== RENDER ALL ========== */
+/* =========================
+   RENDER ALL
+========================= */
 function renderAll(){
-  setServiceSelects();
-  renderCart(true); renderCart(false);
-  renderSuggest(true);
-
-  // manual pick depends on full cart
-  if($("assignMode").value==="manual"){
-    $("manualPickWrap").classList.remove("hide");
-    refreshManualPick();
-  }else{
-    $("manualPickWrap").classList.add("hide");
-  }
-
+  // selects
+  setServiceSelect();
+  // cart
+  renderCart();
+  // quick staff list
+  renderEligibleStaff();
+  // now serving
+  renderNowServing();
+  // dashboard
   renderKPI();
   renderBalanceBoard();
-  renderNowServing();
-  renderStaffCards();
+  // employees/services/jobs pages
+  renderEmployees();
   renderServices();
   renderJobs();
 }
